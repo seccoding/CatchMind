@@ -10,11 +10,16 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.chat.repo.ChatRepository;
+import com.ex2i.websocket.game.GameManager;
+import com.ex2i.websocket.game.GameMessage;
 import com.google.gson.Gson;
 
 @Component
 public class ChatHandler extends TextWebSocketHandler {
 
+	@Autowired
+	private GameManager gameManager;
+	
 	@Autowired
 	private ChatRepository repository;
 	
@@ -26,7 +31,8 @@ public class ChatHandler extends TextWebSocketHandler {
 		Gson gson = new Gson();
 		
 		ChatMessage chatMessage = gson.fromJson(payload, ChatMessage.class);
-		/**
+		
+		/*
 		 * 모든 채팅방에 전송
 		 */
 		if ( chatMessage.getMessageType().equals(MessageType.ALL) ) {
@@ -34,7 +40,14 @@ public class ChatHandler extends TextWebSocketHandler {
 				room.handle(session, chatMessage);
 			});
 		}
-		/**
+		/*
+		 * 게임 Rule 관리
+		 */
+		else if ( chatMessage.getMessageType().equals(MessageType.GAME) ) {
+			GameMessage gameMessage = gson.fromJson(payload, GameMessage.class);
+			gameManager.handle(gameMessage);
+		}
+		/*
 		 * 자신이 속한 방에만 전송
 		 */
 		else {
