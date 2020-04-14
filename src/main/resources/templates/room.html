@@ -67,7 +67,26 @@
 			}
 		});
 		
+		var isOwner = {{isOwner}};
+		if ( isOwner ) {
+			$("#startGame").show();
+		}
+		$("#startGame").click(function() {
+			nextTurn();
+			startGame();
+		});
+		
 	});
+	
+	
+	function doNotReload(){
+	    if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) || (event.keyCode == 116) ) {
+	        event.keyCode = 0;
+	        event.cancelBubble = true;
+	        event.returnValue = false;
+	    } 
+	}
+	document.onkeydown = doNotReload;
 </script>
 </head>
 <body>
@@ -83,6 +102,7 @@
 			</div>
 			<textarea id="message" style="width: 300px; min-height: 50px;"></textarea>
 		    <button class="send">보내기</button>
+		    <button id="startGame" style="display:none;">게임시작</button>
 		</div>
 	</div>
 </div> 

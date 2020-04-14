@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ex2i.websocket.chat.repo.ChatRepository;
+import com.ex2i.websocket.chat.room.ChatRoom;
 
 @Controller
 public class ChatController {
@@ -21,10 +22,8 @@ public class ChatController {
 	public ModelAndView viewChatRoomList() {
 		ModelAndView view = new ModelAndView("roomlist");
 		view.addObject("rooms", repo.getChatRooms());
-		
 		return view;
 	}
-	
 	
 	@PostMapping("/room")
 	@ResponseBody
@@ -40,9 +39,15 @@ public class ChatController {
 			@RequestParam String userName
 		) {
 		userName = userName.replace("<", "&lt;").replace(">", "&gt;");
+		
+		ChatRoom room = repo.getChatRoom(id);
+		int gamerCount = room.getSessions().size();
+		
 		ModelAndView view = new ModelAndView("room");	
-		view.addObject("room", repo.getChatRoom(id));
+		view.addObject("room", room);
 		view.addObject("userName", userName);
+		view.addObject("isOwner", gamerCount == 0);
+		
 		return view;
 	}
 	

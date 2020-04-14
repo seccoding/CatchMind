@@ -242,6 +242,7 @@ public class ChatRoom {
 					gameMessage.setChatRoomId(id);
 					gameMessage.setMessageType(MessageType.GAME);
 					gameMessage.setCommand(CommandType.NOT_MY_TURN);
+					gameMessage.setTimer(limitTime);
 					TextMessage gameCommandMessage = new TextMessage(gson.toJson(gameMessage));
 					
 					try {

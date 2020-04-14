@@ -43,10 +43,8 @@ public class GameManager {
 	 * @param roomId
 	 */
 	private void startGame(String roomId) {
-		idx = 0;
 		ChatRoom room = repo.getChatRoom(roomId);
 		room.startGame();
-		nextTurn(roomId);
 	}
 	
 	/**
@@ -75,7 +73,7 @@ public class GameManager {
 			idx = 0;
 		}
 		
-		room.nextTurn(idx, 180, quiz.getQuiz());
+		room.nextTurn(idx, 10, quiz.getQuiz());
 		idx += 1;
 		
 	}

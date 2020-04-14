@@ -66,10 +66,18 @@
 	
 	
 </script>
-<p>
-	<canvas id="canvas" width="500" height="500" style="border: 1px solid #333;"></canvas>
-</p>
-<p>
+<div>
+	<div style="position: relative; width: 500px; height: 500px;">
+		<canvas id="canvas" width="500" height="500" style="border: 1px solid #333; position: absolute;"></canvas>
+		<div style="position: absolute; right: 0; top: 0;">
+			<input type="text" id="quiz" >
+			<span id="timer" style="display:none;">
+				<span id="min">0</span>:<span id="sec">10</span>
+			</span>
+		</div>
+	</div>
+</div>
+<div>
 	<input type="color" id="color"/>
 	<select id="size">
 		<option value="1">가늘게</option>
@@ -77,4 +85,4 @@
 		<option value="9">굵게</option>
 	</select>
 	<input type="button" id="clear" value="지우기" />
-</p>
+</div>
