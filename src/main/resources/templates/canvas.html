@@ -11,6 +11,11 @@
 		var isDown = false;
 		
 		canvas.mousemove(function(e) {
+			console.log(isControlMe); 
+			if ( isControlMe == false ) {
+				return;
+			}
+			
 			left = e.offsetX;
 			top = e.offsetY;
 			
@@ -23,6 +28,11 @@
 		});
 		
 		canvas.mousedown(function(e) {
+			
+			if ( isControlMe == false ) {
+				return;
+			}
+			
 			isDown = true;
 			ctx.beginPath();
 			ctx.moveTo(left, top);
@@ -32,10 +42,20 @@
 		});
 		
 		canvas.mouseup(function() {
+			
+			if ( isControlMe == false ) {
+				return;
+			}
+			
 			isDown = false;
 		});
 		
 		$("#clear").click(function() {
+			
+			if ( isControlMe == false ) {
+				return;
+			}
+			
 			ctx.fillStyle = "#FFFFFF";
 			ctx.fillRect(0, 0, 500, 500);
 			

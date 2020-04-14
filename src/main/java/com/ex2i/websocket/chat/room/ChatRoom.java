@@ -9,6 +9,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
+import com.ex2i.websocket.game.GameMessage;
+import com.ex2i.websocket.game.constants.CommandType;
 import com.google.gson.Gson;
 
 public class ChatRoom {
@@ -148,12 +150,43 @@ public class ChatRoom {
 	 */
 	public void startGame() {
 		
+		GameMessage message = new GameMessage();
+		message.setChatRoomId(id);
+		message.setMessageType(MessageType.GAME);
+		message.setCommand(CommandType.START);
+		
+		Gson gson = new Gson();
+		TextMessage textMessage = new TextMessage(gson.toJson(message));
+		
+		sessions.parallelStream().forEach(session -> {
+			try {
+				session.sendMessage(textMessage);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	/**
 	 * 게임을 종료한다.
 	 */
 	public void endGame() {
+		
+		GameMessage message = new GameMessage();
+		message.setChatRoomId(id);
+		message.setMessageType(MessageType.GAME);
+		message.setCommand(CommandType.END);
+		
+		Gson gson = new Gson();
+		TextMessage textMessage = new TextMessage(gson.toJson(message));
+		
+		sessions.parallelStream().forEach(session -> {
+			try {
+				session.sendMessage(textMessage);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 		
 	}
 
@@ -164,6 +197,46 @@ public class ChatRoom {
 	 * @param quiz 문제
 	 */
 	public void nextTurn(int gamerIdx, int limitTime, String quiz) {
+		
+		GameMessage message = new GameMessage();
+		message.setChatRoomId(id);
+		message.setMessageType(MessageType.GAME);
+		message.setCommand(CommandType.NEXT_TURN);
+		message.setTimer(limitTime);
+		message.setQuiz(quiz);
+		
+		Gson gson = new Gson();
+		TextMessage textMessage = new TextMessage(gson.toJson(message));
+		
+		int idx = 0;
+		for ( WebSocketSession gamer : sessions ) {
+			if ( idx == gamerIdx ) {
+				// 출제자에게 문제 및 제어권한 부여
+				try {
+					gamer.sendMessage(textMessage);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				// 그 외 참여자의 제어권한 회수
+				sessions.parallelStream().filter(sess -> sess != gamer).forEach(sess -> {
+					GameMessage gameMessage = new GameMessage();
+					gameMessage.setChatRoomId(id);
+					gameMessage.setMessageType(MessageType.GAME);
+					gameMessage.setCommand(CommandType.NOT_MY_TURN);
+					TextMessage gameCommandMessage = new TextMessage(gson.toJson(gameMessage));
+					
+					try {
+						sess.sendMessage(gameCommandMessage);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+				return;
+			}
+			
+			idx += 1;
+		}
 		
 	}
 

@@ -54,7 +54,6 @@ public class ChatHandler extends TextWebSocketHandler {
 			repository.getChatRoom(chatMessage.getChatRoomId()).handle(session, chatMessage);
 		}
 		
-		
 	}
 	
 	@Override

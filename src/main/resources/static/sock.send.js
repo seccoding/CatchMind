@@ -32,6 +32,8 @@ $().ready(function() {
 				receiveDraw(content.point);
 			} else if (content.messageType == "CLEAR") {
 				receiveClearCanvas();
+			} else if ( content.messageType == "GAME" ) {
+				execCommand(content);
 			}
 		}
 	}
