@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope("prototype")
 public class Quiz {
 
 	private List<String> quizList;

@@ -11,7 +11,6 @@
 		var isDown = false;
 		
 		canvas.mousemove(function(e) {
-			console.log(isControlMe); 
 			if ( isControlMe == false ) {
 				return;
 			}
@@ -25,6 +24,13 @@
 				
 				sendDraw("DRAW", left, top);
 			}
+		});
+		
+		canvas.mouseleave(function(e) {
+			if ( isControlMe == false ) {
+				return;
+			}
+			isDown = false;
 		});
 		
 		canvas.mousedown(function(e) {

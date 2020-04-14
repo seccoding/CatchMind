@@ -33,25 +33,22 @@ var nextTurn = function() {
 var execCommand = function(content) {
 	if ( content.command == "START" ) {
 		alert("게임이 시작되었습니다!");
-		gameTimer(10);
 	}
 	else if ( content.command == "END" ) {
+		isControlMe = false;
 		alert("게임이 종료되었습니다!");
 	}
 	else if ( content.command == "NEXT_TURN" ) {
 		isControlMe = true;
-		$("#startGame").show();
 		$("#quiz").val(content.quiz);
 		$("#quiz").show();
 		$("#clear").click();
-		
+		gameTimer(content.timer);
 	}
 	else if ( content.command == "NOT_MY_TURN" ) {
 		isControlMe = false;
-		$("#startGame").hide();
 		$("#quiz").hide();
-		
-//		gameTimer(content.timer);
+		gameTimer(content.timer);
 	}
 }
 
@@ -70,9 +67,12 @@ var gameTimer = function(seconds) {
         $("#min").text(min);
         $("#sec").text(sec);
 
-        if ( seconds == 0 ) {
+        if ( min == 0 && seconds == 0 ) {
+            if ( isControlMe == true ) {
+            	isControlMe = false;
+            	nextTurn();
+            }
             clearInterval(interval);
-            endGame();
         }
 
     }, 1000);
