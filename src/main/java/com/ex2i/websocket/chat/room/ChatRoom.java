@@ -41,6 +41,11 @@ public class ChatRoom {
 		this.sessions = sessions;
 	}
 	
+	/**
+	 * 채팅 및 그림 그리기 전송
+	 * @param session
+	 * @param chatMessage
+	 */
 	public void handle(WebSocketSession session, ChatMessage chatMessage) {
 		if ( chatMessage.getMessageType().equals(MessageType.JOIN) ) {
 			joinInRoom(session);
