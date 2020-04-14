@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>방제목</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$().ready(function() {
+		$("#createRoom").click(function() {
+			
+			var roomName = $("#roomName").val();
+			roomName = $.trim(roomName);
+			if ( roomName == "" ) {
+				alert("방 이름을 입력해주세요.");
+				$("#roomName").focus();
+				return;
+			}
+			
+			var userName = $("#userName").val();
+			userName = $.trim(userName);
+			if ( userName == "" ) {
+				alert("사용자 이름을 입력하세요.");
+				$("#userName").focus();
+				return
+			}
+			
+			$.post("/room", {roomName: roomName}, function(response) {
+				location.href = "/room/" + response + "?userName=" + userName;
+			});
+		});
+		
+		$(".goRoom").click(function() {
+			var userName = $("#userName").val();
+			userName = $.trim(userName);
+			if ( userName == "" ) {
+				alert("사용자 이름을 입력하세요.");
+				$("#userName").focus();
+				return
+			}
+			
+			var roomId = $(this).data("room-id");
+			roomId = $.trim(roomId);
+			if ( roomId != "" ) {
+				location.href = "/room/" + roomId + "?userName=" + userName;
+			}
+			
+		});
+	});
+</script>
+</head>
+<body>
+	<div>
+		<input type="text" name="roomName" id="roomName" />
+		<button type="button" id="createRoom">방만들기</button>
+	</div>
+	<div>
+		<input type="text" name="userName" id="userName" />
+	</div>
+	<ul>
+		{{#rooms}}
+		<li>
+			<a class="goRoom" data-room-id="{{id}}">{{name}}</a>
+		</li> 
+		{{/rooms}}
+	</ul>
+	
+</body>
+</html>

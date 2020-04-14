@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>방제목</title>
+<style type="text/css">
+	.me > div, .other > div {
+		border: 1px solid #DFDF00;
+		background-color: #FFFF00;
+		margin-bottom: 5px;
+		padding: 5px;
+		border-radius: 7px;
+		max-width: 250px;
+		min-width: 10px;
+		display: inline-block;
+		
+		margin-right: 10px;
+		font-size: 12px;
+	}
+	
+	.other > div {
+		border: 1px solid #ccc;
+		background-color: #eee;
+		vertical-align: top;
+	}
+	
+	.me {
+		text-align: right;
+	}
+	
+	.chat_box {
+		max-height: 500px;
+		overflow: auto;
+	}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/sockjs.min.js"></script>
+<script src="/sock.send.js"></script>
+<script src="/sock.receive.js"></script>
+<script type="text/javascript">
+
+	String.prototype.replaceAll = function(originText, newText) {
+		return this.split(originText).join(newText);
+	};
+
+	$().ready(function() {
+		
+		var content = $(".content");
+		roomId = content.data("room-id");
+		member = "{{userName}}";
+		
+		$(".send").click(function() {
+			var msg = $("#message").val();
+			msg = $.trim(msg);
+			
+			if ( msg != "" ) {
+				send("CHAT", msg);
+			}
+			
+			$("#message").val("");
+		});
+		
+		$("#message").keyup(function(e) {
+			if ( e.keyCode == 13 && e.shiftKey == false ) {
+				$(".send").click();
+			}
+		});
+		
+	});
+</script>
+</head>
+<body>
+
+<h1>{{room.name}}({{room.id}})</h1>
+<div>
+	<div style="display: inline-block;">
+		{{> canvas}}
+	</div>
+	<div style="display: inline-block; vertical-align: top; width: 500px;">
+		<div class="content" data-room-id="{{room.id}}" >
+			<div class="chat_box">
+			</div>
+			<textarea id="message" style="width: 300px; min-height: 50px;"></textarea>
+		    <button class="send">보내기</button>
+		</div>
+	</div>
+</div> 
+
+</body>
+</html>

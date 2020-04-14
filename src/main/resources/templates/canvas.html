@@ -1,0 +1,60 @@
+<script type="text/javascript">
+
+	$().ready(function() {
+		
+		var canvas = $("#canvas");
+		var ctx = canvas[0].getContext("2d");
+		
+		var left = 0;
+		var top = 0;
+		
+		var isDown = false;
+		
+		canvas.mousemove(function(e) {
+			left = e.offsetX;
+			top = e.offsetY;
+			
+			if ( isDown == true ) {
+				ctx.lineTo(left, top);
+				ctx.stroke();
+				
+				sendDraw("DRAW", left, top);
+			}
+		});
+		
+		canvas.mousedown(function(e) {
+			isDown = true;
+			ctx.beginPath();
+			ctx.moveTo(left, top);
+			ctx.strokeStyle = $("#color").val();
+			ctx.lineWidth = $("#size").val();
+			sendDraw("START-DRAW", left, top, $("#color").val(), $("#size").val());
+		});
+		
+		canvas.mouseup(function() {
+			isDown = false;
+		});
+		
+		$("#clear").click(function() {
+			ctx.fillStyle = "#FFFFFF";
+			ctx.fillRect(0, 0, 500, 500);
+			
+			sendClearCanvas();
+		});
+		
+	});
+	
+	
+</script>
+<p>
+	<canvas id="canvas" width="500" height="500" style="border: 1px solid #333;"></canvas>
+</p>
+<p>
+	<input type="color" id="color"/>
+	<select id="size">
+		<option value="1">가늘게</option>
+		<option value="3" selected="selected">보통</option>
+		<option value="9">굵게</option>
+	</select>
+	<input type="button" id="clear" value="지우기" />
+</p>
