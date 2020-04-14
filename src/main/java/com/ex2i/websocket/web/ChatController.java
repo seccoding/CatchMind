@@ -21,8 +21,10 @@ public class ChatController {
 	public ModelAndView viewChatRoomList() {
 		ModelAndView view = new ModelAndView("roomlist");
 		view.addObject("rooms", repo.getChatRooms());
+		
 		return view;
 	}
+	
 	
 	@PostMapping("/room")
 	@ResponseBody
