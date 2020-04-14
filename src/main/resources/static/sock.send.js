@@ -8,6 +8,7 @@ var member = undefined;
 var send = undefined;
 var sendDraw = undefined;
 var clearCanvas = undefined;
+var forceClose = undefined;
 
 $().ready(function() {
 	// WS 연결
@@ -86,5 +87,11 @@ $().ready(function() {
 
 		sock.send(JSON.stringify(msg));
 	}
+	
 });
 
+window.onbeforeunload = function() {
+	if ( sock != undefined && sock != null ) {
+		sock.close();
+	}
+}
