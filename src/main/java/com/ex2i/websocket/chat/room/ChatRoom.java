@@ -3,6 +3,7 @@ package com.ex2i.websocket.chat.room;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -36,6 +37,9 @@ public class ChatRoom {
 	}
 
 	public Set<WebSocketSession> getSessions() {
+		sessions = sessions.parallelStream()
+							.filter(session -> session.isOpen())
+							.collect(Collectors.toSet());
 		return sessions;
 	}
 
@@ -91,7 +95,9 @@ public class ChatRoom {
 	 * @param chatMessage
 	 */
 	private void sendMessageToRoomUsersWithoutMe(WebSocketSession session, ChatMessage chatMessage) {
-		sessions.parallelStream().filter(sess-> sess != session).forEach(sess -> {
+		getSessions().parallelStream()
+				.filter(sess-> sess != session)
+				.forEach(sess -> {
 			send(sess, chatMessage);
 		});
 	}
@@ -104,7 +110,9 @@ public class ChatRoom {
 	private void sendMessageToUser(WebSocketSession session, ChatMessage chatMessage) {
 		sendToMe(session, chatMessage);
 		String toSessionId = chatMessage.getToSessionId();
-		sessions.parallelStream().filter(sess-> sess.getId().equals(toSessionId)).forEach(sess -> {
+		getSessions().parallelStream()
+				.filter(sess-> sess.getId().equals(toSessionId))
+				.forEach(sess -> {
 			send(sess, chatMessage);
 		});
 	}
@@ -131,7 +139,8 @@ public class ChatRoom {
 		
 		TextMessage textMessage = new TextMessage(gson.toJson(chatMessage));
 		try {
-			session.sendMessage(textMessage);
+			if ( session.isOpen() )
+				session.sendMessage(textMessage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -158,9 +167,11 @@ public class ChatRoom {
 		Gson gson = new Gson();
 		TextMessage textMessage = new TextMessage(gson.toJson(message));
 		
-		sessions.parallelStream().forEach(session -> {
+		getSessions().parallelStream()
+				.forEach(session -> {
 			try {
-				session.sendMessage(textMessage);
+				if ( session.isOpen() )
+					session.sendMessage(textMessage);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -180,9 +191,11 @@ public class ChatRoom {
 		Gson gson = new Gson();
 		TextMessage textMessage = new TextMessage(gson.toJson(message));
 		
-		sessions.parallelStream().forEach(session -> {
+		getSessions().parallelStream()
+				.forEach(session -> {
 			try {
-				session.sendMessage(textMessage);
+				if ( session.isOpen() )
+					session.sendMessage(textMessage);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -208,18 +221,23 @@ public class ChatRoom {
 		Gson gson = new Gson();
 		TextMessage textMessage = new TextMessage(gson.toJson(message));
 		
+		Set<WebSocketSession> gamerList = getSessions();
+		
 		int idx = 0;
-		for ( WebSocketSession gamer : sessions ) {
+		for ( WebSocketSession gamer : gamerList ) {
 			if ( idx == gamerIdx ) {
 				// 출제자에게 문제 및 제어권한 부여
 				try {
-					gamer.sendMessage(textMessage);
+					if ( gamer.isOpen() )
+						gamer.sendMessage(textMessage);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				
 				// 그 외 참여자의 제어권한 회수
-				sessions.parallelStream().filter(sess -> sess != gamer).forEach(sess -> {
+				getSessions().parallelStream()
+						.filter(session -> session != gamer)
+						.forEach(sess -> {
 					GameMessage gameMessage = new GameMessage();
 					gameMessage.setChatRoomId(id);
 					gameMessage.setMessageType(MessageType.GAME);
@@ -227,7 +245,8 @@ public class ChatRoom {
 					TextMessage gameCommandMessage = new TextMessage(gson.toJson(gameMessage));
 					
 					try {
-						sess.sendMessage(gameCommandMessage);
+						if ( sess.isOpen() )
+							sess.sendMessage(gameCommandMessage);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
