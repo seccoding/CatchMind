@@ -143,4 +143,28 @@ public class ChatRoom {
 		sessions.remove(session);
 	}
 
+	/**
+	 * 게임을 시작한다.
+	 */
+	public void startGame() {
+		
+	}
+
+	/**
+	 * 게임을 종료한다.
+	 */
+	public void endGame() {
+		
+	}
+
+	/**
+	 * 다음 출제자에게 문제를 제출한다.
+	 * @param gamerIdx 다음 출제자 아이디
+	 * @param limitTime 게임 제한 시간
+	 * @param quiz 문제
+	 */
+	public void nextTurn(int gamerIdx, int limitTime, String quiz) {
+		
+	}
+
 }
