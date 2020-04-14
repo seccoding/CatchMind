@@ -29,9 +29,21 @@ public class GameManager {
 	}
 	
 	public void nextTurn(String roomId) {
+		
+		if ( quiz.isEmpty() ) {
+			endGame(roomId);
+			return;
+		}
+		
 		ChatRoom room = repo.getChatRoom(roomId);
+		
+		if ( room.getSessions().size() == idx ) {
+			idx = 0;
+		}
+		
 		room.nextTurn(idx, 180, quiz.getQuiz());
 		idx += 1;
+		
 	}
 	
 }

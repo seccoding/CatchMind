@@ -32,4 +32,8 @@ public class Quiz {
 		return quiz; 
 	}
 	
+	public boolean isEmpty() {
+		return quizList.size() == 0;
+	}
+	
 }
