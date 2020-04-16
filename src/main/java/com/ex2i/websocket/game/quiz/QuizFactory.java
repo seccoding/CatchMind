@@ -42,7 +42,7 @@ public class QuizFactory {
 			idx += 1;
 		}
 		
-		quizList = quizList.parallelStream().distinct().collect(Collectors.toList());
+		quizList = quizList.stream().distinct().collect(Collectors.toList());
 	}
 	
 	public String getQuiz() {
