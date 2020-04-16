@@ -1,5 +1,39 @@
 var isControlMe = false;
 
+var members = [];
+
+var timer = undefined;
+
+var joinMember = function(content) {
+	members.push({
+		sessionId: content.sessionId,
+		writer: content.writer,
+		score: 0
+	});
+	
+	console.log(members)
+}
+
+var quitMember = function(content) {
+	
+	var idx = -1;
+	
+	for (var i in members) {
+		if ( members[i].sessionId == content.sessionId ) {
+			idx = i;
+			alert(members[i].writer + content.message);
+			break;
+		}
+	}
+	
+	if ( idx >= 0 ) {
+		members.splice(idx, 1);
+	}
+	
+	console.log(members)
+	
+}
+
 var startGame = function() {
 	var msg = {
 		chatRoomId: roomId,
@@ -52,14 +86,40 @@ var execCommand = function(content) {
 	}
 }
 
-var gameTimer = function(seconds) {
+var execPass = function(content) {
+	
+	if ( timer != undefined ) {
+		clearInterval(timer);
+		timer = undefined;
+	}
+	
+	var sessionId = content.sessionId;
+	
+	for ( var i in members ) {
+		if ( members[i].sessionId == sessionId ) {
+			members[i].score += 1;
+			break;
+		}
+	}
+	
+	alert(content.writer + "님 정답!");
+}
+
+var gameTimer = function(time) {
+	
+	if ( timer != undefined ) {
+		clearInterval(timer);
+		timer = undefined;
+	}
+	
 	$("#timer").show();
 	
-	var seconds = seconds;
+	var seconds = time;
 
-    var min = 0;
-    var sec = 0;
-    var interval = setInterval(function() {
+    var min = parseInt(seconds / 60);
+    var sec = seconds % 60;
+    
+    timer = setInterval(function() {
         seconds -= 1;
         min = parseInt(seconds / 60);
         sec = seconds % 60;
@@ -72,7 +132,7 @@ var gameTimer = function(seconds) {
             	isControlMe = false;
             	nextTurn();
             }
-            clearInterval(interval);
+            clearInterval(timer);
         }
 
     }, 1000);

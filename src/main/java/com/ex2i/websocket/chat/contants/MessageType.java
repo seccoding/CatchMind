@@ -18,4 +18,8 @@ public interface MessageType {
 	
 	final String SECRET = "SECRET";
 	
+	final String PASS = "PASS";
+	
+	final String QUIT = "QUIT";
+	
 }

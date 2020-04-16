@@ -10,6 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
+import com.ex2i.websocket.game.GameManager;
 import com.ex2i.websocket.game.GameMessage;
 import com.ex2i.websocket.game.constants.CommandType;
 import com.google.gson.Gson;
@@ -36,11 +37,16 @@ public class ChatRoom {
 		this.name = name;
 	}
 
+	public Set<WebSocketSession> getClosedSessions() {
+		return sessions.parallelStream()
+							.filter(session -> !session.isOpen())
+							.collect(Collectors.toSet());
+	}
+	
 	public Set<WebSocketSession> getSessions() {
-		sessions = sessions.parallelStream()
+		return sessions.parallelStream()
 							.filter(session -> session.isOpen())
 							.collect(Collectors.toSet());
-		return sessions;
 	}
 
 	public void setSessions(Set<WebSocketSession> sessions) {
@@ -59,7 +65,20 @@ public class ChatRoom {
 			sendMessageToRoomUsers(session, chatMessage);
 		}
 		else if ( chatMessage.getMessageType().equals(MessageType.CHAT) ) {
+			
+			/*
+			 * 정답을 맞췄을 경우
+			 */
+			if ( GameManager.isStart() ) {
+				String quiz = GameManager.getQuiz();
+				String message = chatMessage.getMessage().trim();
+				
+				if ( quiz.equalsIgnoreCase(message) ) {
+					chatMessage.setMessageType(MessageType.PASS);
+				}
+			}
 			sendMessageToRoomUsers(session, chatMessage);
+			
 		}
 		else if ( chatMessage.getMessageType().equals(MessageType.DRAW)
 				|| chatMessage.getMessageType().equals(MessageType.START_DRAW) 
@@ -69,6 +88,14 @@ public class ChatRoom {
 		else if ( chatMessage.getMessageType().equals(MessageType.SECRET) ) {
 			sendMessageToUser(session, chatMessage);
 		}
+		else if ( chatMessage.getMessageType().equals(MessageType.QUIT) ) {
+			getSessions().parallelStream()
+						.forEach(sess -> {
+							System.out.println(sess);
+							send(sess, chatMessage);
+						});
+		}
+		
 	}
 	
 	/**
@@ -98,8 +125,8 @@ public class ChatRoom {
 		getSessions().parallelStream()
 				.filter(sess-> sess != session)
 				.forEach(sess -> {
-			send(sess, chatMessage);
-		});
+					send(sess, chatMessage);
+				});
 	}
 	
 	/**
@@ -113,8 +140,8 @@ public class ChatRoom {
 		getSessions().parallelStream()
 				.filter(sess-> sess.getId().equals(toSessionId))
 				.forEach(sess -> {
-			send(sess, chatMessage);
-		});
+					send(sess, chatMessage);
+				});
 	}
 	
 	/**
@@ -169,13 +196,13 @@ public class ChatRoom {
 		
 		getSessions().parallelStream()
 				.forEach(session -> {
-			try {
-				if ( session.isOpen() )
-					session.sendMessage(textMessage);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+					try {
+						if ( session.isOpen() )
+							session.sendMessage(textMessage);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
 	}
 
 	/**
@@ -193,13 +220,13 @@ public class ChatRoom {
 		
 		getSessions().parallelStream()
 				.forEach(session -> {
-			try {
-				if ( session.isOpen() )
-					session.sendMessage(textMessage);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+					try {
+						if ( session.isOpen() )
+							session.sendMessage(textMessage);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
 		
 	}
 

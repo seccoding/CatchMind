@@ -14,9 +14,21 @@ public class GameManager {
 	private ChatRepository repo;
 	
 	@Autowired
-	private Quiz quiz;
+	private QuizFactory quizFactory;
+	
+	private static boolean isStart;
+	
+	private static String quiz;
 	
 	private int idx;
+	
+	public static boolean isStart() {
+		return isStart;
+	}
+	
+	public static String getQuiz() {
+		return quiz;
+	}
 	
 	/**
 	 * 게임 Rule을 관리한다.
@@ -43,8 +55,9 @@ public class GameManager {
 	 * @param roomId
 	 */
 	private void startGame(String roomId) {
+		isStart = true;
 		idx = 0;
-		quiz.reset();
+		quizFactory.reset();
 		ChatRoom room = repo.getChatRoom(roomId);
 		room.startGame();
 		nextTurn(roomId);
@@ -55,6 +68,7 @@ public class GameManager {
 	 * @param roomId
 	 */
 	private void endGame(String roomId) {
+		isStart = false;
 		ChatRoom room = repo.getChatRoom(roomId);
 		room.endGame();
 	}
@@ -64,8 +78,9 @@ public class GameManager {
 	 * @param roomId
 	 */
 	private void nextTurn(String roomId) {
+		isStart = true;
 		
-		if ( quiz.isEmpty() ) {
+		if ( quizFactory.isEmpty() ) {
 			endGame(roomId);
 			return;
 		}
@@ -76,7 +91,9 @@ public class GameManager {
 			idx = 0;
 		}
 		
-		room.nextTurn(idx, 10, quiz.getQuiz());
+		quiz = quizFactory.getQuiz();
+		
+		room.nextTurn(idx, 10, quiz);
 		idx += 1;
 		
 	}

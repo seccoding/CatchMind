@@ -39,12 +39,18 @@ public class ChatRepository {
 	public Collection<ChatRoom> getChatRooms() {
 		return chatRoomMap.values();
 	}
-	
-	public void remove(WebSocketSession session) {
+
+	public String getRoomId(WebSocketSession session) {
 		Collection<ChatRoom> rooms = getChatRooms();
-		rooms.parallelStream().forEach(room -> {
-			room.remove(session);
-		});
+		return rooms.parallelStream()
+					.filter(room -> room.getClosedSessions().contains(session))
+					.map(room -> room.getId())
+					.findFirst()
+					.orElse(null);
+	}
+	
+	public void remove(String roomId, WebSocketSession session) {
+		getChatRoom(roomId).remove(session);
 	}
 	
 }

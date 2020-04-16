@@ -16,6 +16,7 @@ $().ready(function() {
 
 	// WS 연결 성공!
 	sock.onopen = function() {
+		
 		// send : connection으로 message를 전달
 		// connection이 맺어진 후 가입(JOIN) 메시지를 전달
 		send("JOIN", "");
@@ -26,6 +27,11 @@ $().ready(function() {
 
 			if (content.messageType == "CHAT"
 					|| content.messageType == "JOIN") {
+				
+				if ( content.messageType == "JOIN" ) {
+					joinMember(content);
+				}
+				
 				receiveChat(content);
 			} else if (content.messageType == "START-DRAW") {
 				receiveStartDraw(content.point);
@@ -35,6 +41,10 @@ $().ready(function() {
 				receiveClearCanvas();
 			} else if ( content.messageType == "GAME" ) {
 				execCommand(content);
+			} else if ( content.messageType == "PASS" ) {
+				execPass(content);
+			} else if ( content.messageType == "QUIT" ) {
+				quitMember(content);
 			}
 		}
 	}

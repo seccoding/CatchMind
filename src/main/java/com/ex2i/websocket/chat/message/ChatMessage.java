@@ -5,6 +5,15 @@ import java.util.Map;
 public class ChatMessage {
 
 	private String chatRoomId;
+	
+	/**
+	 * 세션아이디
+	 */
+	private String sessionId;
+
+	/**
+	 * 이름
+	 */
 	private String writer;
 	private String message;
 	private Map<String, String> point;
@@ -18,6 +27,14 @@ public class ChatMessage {
 
 	public void setChatRoomId(String chatRoomId) {
 		this.chatRoomId = chatRoomId;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 
 	public String getWriter() {
@@ -36,20 +53,20 @@ public class ChatMessage {
 		this.message = message;
 	}
 
-	public String getMessageType() {
-		return messageType;
-	}
-
-	public void setMessageType(String messageType) {
-		this.messageType = messageType;
-	}
-
 	public Map<String, String> getPoint() {
 		return point;
 	}
 
 	public void setPoint(Map<String, String> point) {
 		this.point = point;
+	}
+
+	public String getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
 	}
 
 	public String getToSessionId() {

@@ -10,8 +10,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.chat.repo.ChatRepository;
+import com.ex2i.websocket.chat.room.ChatRoom;
 import com.ex2i.websocket.game.GameManager;
 import com.ex2i.websocket.game.GameMessage;
+import com.ex2i.websocket.game.constants.CommandType;
 import com.google.gson.Gson;
 
 @Component
@@ -31,7 +33,7 @@ public class ChatHandler extends TextWebSocketHandler {
 		Gson gson = new Gson();
 		
 		ChatMessage chatMessage = gson.fromJson(payload, ChatMessage.class);
-		
+		chatMessage.setSessionId(session.getId());
 		/*
 		 * 모든 채팅방에 전송
 		 */
@@ -51,14 +53,37 @@ public class ChatHandler extends TextWebSocketHandler {
 		 * 자신이 속한 방에만 전송
 		 */
 		else {
-			repository.getChatRoom(chatMessage.getChatRoomId()).handle(session, chatMessage);
+			ChatRoom room = repository.getChatRoom(chatMessage.getChatRoomId());
+			room.handle(session, chatMessage);
+			
+			// 정답을 맞추었을 때
+			if ( chatMessage.getMessageType().equals(MessageType.PASS) ) {
+				GameMessage gameMessage = new GameMessage();
+				gameMessage.setChatRoomId(chatMessage.getChatRoomId());
+				gameMessage.setCommand(CommandType.NEXT_TURN);
+				
+				gameManager.handle(gameMessage);
+			}
+			
 		}
 		
 	}
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		repository.remove(session);
+		
+		String roomId = repository.getRoomId(session);
+		
+		if ( roomId != null ) {
+			repository.remove(roomId, session);
+			
+			ChatMessage chatMessage = new ChatMessage();
+			chatMessage.setSessionId(session.getId());
+			chatMessage.setMessageType(MessageType.QUIT);
+			chatMessage.setMessage("님이 게임에서 나갔습니다.");
+			
+			repository.getChatRoom(roomId).handle(null, chatMessage);
+		}
 	}
 	
 }

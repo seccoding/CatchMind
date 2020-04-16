@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
-public class Quiz {
+public class QuizFactory {
 
 	private List<String> quizList;
 
-	public Quiz() {
+	public QuizFactory() {
 		reset();
 	}
 	
