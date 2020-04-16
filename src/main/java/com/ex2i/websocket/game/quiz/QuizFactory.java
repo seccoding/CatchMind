@@ -1,4 +1,4 @@
-package com.ex2i.websocket.game;
+package com.ex2i.websocket.game.quiz;
 
 import java.util.ArrayList;
 import java.util.List;

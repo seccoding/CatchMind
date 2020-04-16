@@ -1,4 +1,4 @@
-package com.ex2i.websocket.game;
+package com.ex2i.websocket.game.message;
 
 public class GameMessage {
 

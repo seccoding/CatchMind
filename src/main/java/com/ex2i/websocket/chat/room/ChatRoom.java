@@ -11,8 +11,8 @@ import org.springframework.web.socket.WebSocketSession;
 import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.game.GameManager;
-import com.ex2i.websocket.game.GameMessage;
 import com.ex2i.websocket.game.constants.CommandType;
+import com.ex2i.websocket.game.message.GameMessage;
 import com.google.gson.Gson;
 
 public class ChatRoom {

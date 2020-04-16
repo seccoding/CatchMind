@@ -12,8 +12,8 @@ import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.chat.repo.ChatRepository;
 import com.ex2i.websocket.chat.room.ChatRoom;
 import com.ex2i.websocket.game.GameManager;
-import com.ex2i.websocket.game.GameMessage;
 import com.ex2i.websocket.game.constants.CommandType;
+import com.ex2i.websocket.game.message.GameMessage;
 import com.google.gson.Gson;
 
 @Component

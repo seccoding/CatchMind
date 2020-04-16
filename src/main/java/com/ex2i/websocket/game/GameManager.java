@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import com.ex2i.websocket.chat.repo.ChatRepository;
 import com.ex2i.websocket.chat.room.ChatRoom;
 import com.ex2i.websocket.game.constants.CommandType;
+import com.ex2i.websocket.game.message.GameMessage;
+import com.ex2i.websocket.game.quiz.QuizFactory;
 
 @Component
 public class GameManager {
