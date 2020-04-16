@@ -42,6 +42,7 @@ $().ready(function() {
 			} else if ( content.messageType == "GAME" ) {
 				execCommand(content);
 			} else if ( content.messageType == "PASS" ) {
+				receiveChat(content);
 				execPass(content);
 			} else if ( content.messageType == "QUIT" ) {
 				quitMember(content);
