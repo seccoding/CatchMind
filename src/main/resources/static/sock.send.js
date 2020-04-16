@@ -44,6 +44,7 @@ $().ready(function() {
 			} else if ( content.messageType == "PASS" ) {
 				receiveChat(content);
 				execPass(content);
+				receiveClearCanvas();
 			} else if ( content.messageType == "QUIT" ) {
 				quitMember(content);
 			}
