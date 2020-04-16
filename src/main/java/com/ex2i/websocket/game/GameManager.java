@@ -93,7 +93,7 @@ public class GameManager {
 		
 		quiz = quizFactory.getQuiz();
 		
-		room.nextTurn(idx, 10, quiz);
+		room.nextTurn(idx, 180, quiz);
 		idx += 1;
 		
 	}
