@@ -82,7 +82,11 @@ var quitMember = function(content) {
 	
 	for ( var i in members ) {
 		if ( members[i].sessionId == content.sessionId ) {
-			alert(members[i].name + content.message);
+			receiveChat({
+				message: members[i].name + content.message
+				, writer: members[i].name
+				, fromMe: "other"
+			});
 			return;
 		}
 	}
