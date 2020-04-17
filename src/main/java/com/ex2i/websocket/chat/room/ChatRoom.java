@@ -98,6 +98,9 @@ public class ChatRoom {
 		
 		if ( chatMessage.isMessageType(MessageType.JOIN) ) {
 			chatHandler.join(session, chatMessage);
+			
+			initGameManager();
+			gameManager.showOrHideStartButton(chatMessage.getChatRoomId());
 		}
 		else if ( chatMessage.isMessageType(MessageType.CHAT) ) {
 			chatHandler.chat(this, session, chatMessage);
@@ -111,6 +114,9 @@ public class ChatRoom {
 		else if ( chatMessage.isMessageType(MessageType.QUIT) ) {
 			chatHandler.quit(session, chatMessage);
 			sendMessage.sendGamerInfoToRoomUsers(chatMessage.getChatRoomId());
+			
+			initGameManager();
+			gameManager.showOrHideStartButton(chatMessage.getChatRoomId());
 		}
 		else if ( chatMessage.isMessageType(MessageType.ALL) ) {
 			sendMessage.sendToAllInRoom(chatMessage);

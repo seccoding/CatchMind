@@ -86,6 +86,12 @@ var execCommand = function(content) {
 		
 		gameTimer(content.timer);
 	}
+	else if ( content.command == "SHOW_START_BTN" ) {
+		$("#startGame").show();
+	}
+	else if ( content.command == "HIDE_START_BTN" ) {
+		$("#startGame").hide();
+	}
 }
 
 var execPass = function(content) {

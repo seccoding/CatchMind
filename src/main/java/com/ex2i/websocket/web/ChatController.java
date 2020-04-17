@@ -46,12 +46,9 @@ public class ChatController {
 			return new ModelAndView("redirect:/room");
 		}
 		
-		int gamerCount = room.getSessions().size();
-		
 		ModelAndView view = new ModelAndView("room");	
 		view.addObject("room", room);
 		view.addObject("userName", userName);
-		view.addObject("isOwner", gamerCount == 0);
 		
 		return view;
 	}

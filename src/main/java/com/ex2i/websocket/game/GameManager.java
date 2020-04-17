@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.repo.ChatRepository;
 import com.ex2i.websocket.chat.room.ChatRoom;
 import com.ex2i.websocket.game.constants.CommandType;
@@ -57,6 +58,37 @@ public class GameManager {
 			nextTurn(roomId);
 		}
 		
+	}
+	
+	/**
+	 * 게임시작 숨김/표시 처리
+	 * @param roomId
+	 */
+	public void showOrHideStartButton(String roomId) {
+		ChatRoom room = repo.getChatRoom(roomId);
+		
+		if ( room == null || room.isStart() ) {
+			return;
+		}
+		
+		int gamerCnt = room.getGamers().size();
+		
+		GameMessage message = new GameMessage();
+		message.setChatRoomId(roomId);
+		message.setMessageType(MessageType.GAME);
+		
+		// 첫번째 플레이어에게 게임시작 버튼 노출.
+		if ( gamerCnt > 1 ) {
+			message.setCommand(CommandType.SHOW_START_BTN);
+			room.getGamers().get(0).send(message);
+		}
+		// 모든 플레이어에게 게임시작 버튼 숨김.
+		else {
+			message.setCommand(CommandType.HIDE_START_BTN);
+			room.getGamers().parallelStream().forEach(gamer -> {
+				gamer.send(message);
+			});
+		}
 	}
 	
 	/**

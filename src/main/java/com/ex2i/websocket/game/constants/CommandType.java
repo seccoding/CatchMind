@@ -10,4 +10,8 @@ public interface CommandType {
 	
 	final String NOT_MY_TURN = "NOT_MY_TURN";
 	
+	final String SHOW_START_BTN = "SHOW_START_BTN";
+	
+	final String HIDE_START_BTN = "HIDE_START_BTN";
+	
 }
