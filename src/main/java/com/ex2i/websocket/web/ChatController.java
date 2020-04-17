@@ -41,6 +41,11 @@ public class ChatController {
 		userName = userName.replace("<", "&lt;").replace(">", "&gt;");
 		
 		ChatRoom room = repo.getChatRoom(id);
+		
+		if ( room == null || room.isStart() ) {
+			return new ModelAndView("redirect:/room");
+		}
+		
 		int gamerCount = room.getSessions().size();
 		
 		ModelAndView view = new ModelAndView("room");	

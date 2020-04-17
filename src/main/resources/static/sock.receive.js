@@ -21,6 +21,11 @@ var ctx = undefined;
 
 // 지우기
 var receiveClearCanvas = function() {
+	if ( ctx == undefined ) {
+		canvas = $("#canvas");
+		ctx = canvas[0].getContext("2d");
+	}
+	
 	ctx.fillStyle = "#FFFFFF";
 	ctx.fillRect(0, 0, 500, 500);
 }
