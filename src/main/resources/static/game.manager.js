@@ -2,13 +2,14 @@ var isControlMe = false;
 
 var timer = undefined;
 
+var members = undefined;
+
 var replaceMember = function(content) {
 	
 	$(".members").remove();
 	
 	var memberList = $(".members_score");
-	var members = content.gamer;
-	console.log(members);
+	members = content.gamer;
 	
 	for ( var i in members ) {
 		memberList.append('<tr class="members"><td>' + members[i].name + '</td><td>' + members[i].score + '</td></tr>');
@@ -75,6 +76,16 @@ var execPass = function(content) {
 	}
 	
 	alert(content.writer + "님 정답!");
+}
+
+var quitMember = function(content) {
+	
+	for ( var i in members ) {
+		if ( members[i].sessionId == content.sessionId ) {
+			alert(members[i].name + content.message);
+			return;
+		}
+	}
 }
 
 var gameTimer = function(time) {
