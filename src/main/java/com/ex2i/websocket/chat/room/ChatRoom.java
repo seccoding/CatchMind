@@ -38,6 +38,14 @@ public class ChatRoom {
 		quizHandler = new QuizHandler(this.sessions);
 	}
 	
+	public boolean isStart() {
+		return gameManager.isStart();
+	}
+	
+	public String getQuiz() {
+		return gameManager.getQuiz();
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -84,7 +92,7 @@ public class ChatRoom {
 			chatHandler.join(session, chatMessage);
 		}
 		else if ( chatMessage.isMessageType(MessageType.CHAT) ) {
-			chatHandler.chat(session, chatMessage);
+			chatHandler.chat(this, session, chatMessage);
 		}
 		else if ( chatMessage.isMessageType(MessageType.DRAW, MessageType.START_DRAW, MessageType.CLEAR_CANVAS) ) {
 			drawHandler.draw(session, chatMessage);

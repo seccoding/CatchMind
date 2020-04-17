@@ -9,6 +9,7 @@ import com.ex2i.websocket.chat.room.ChatRoom;
 import com.ex2i.websocket.game.constants.CommandType;
 import com.ex2i.websocket.game.message.GameMessage;
 import com.ex2i.websocket.game.quiz.QuizFactory;
+import com.ex2i.websocket.util.GetBean;
 
 @Component
 @Scope("prototype")
@@ -17,20 +18,19 @@ public class GameManager {
 	@Autowired
 	private ChatRepository repo;
 	
-	@Autowired
 	private QuizFactory quizFactory;
 	
-	private static boolean isStart;
+	private boolean isStart;
 	
-	private static String quiz;
+	private String quiz;
 	
 	private int idx;
 	
-	public static boolean isStart() {
+	public boolean isStart() {
 		return isStart;
 	}
 	
-	public static String getQuiz() {
+	public String getQuiz() {
 		return quiz;
 	}
 	
@@ -39,6 +39,11 @@ public class GameManager {
 	 * @param gameMessage
 	 */
 	public void handle(GameMessage gameMessage) {
+		
+		if ( quizFactory == null ) {
+			quizFactory = GetBean.get("quizFactory");
+		}
+		
 		String command = gameMessage.getCommand();
 		String roomId = gameMessage.getChatRoomId();
 		

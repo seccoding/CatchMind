@@ -6,6 +6,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
+import com.ex2i.websocket.chat.room.ChatRoom;
 import com.ex2i.websocket.chat.room.Gamer;
 import com.ex2i.websocket.game.GameManager;
 import com.ex2i.websocket.util.SendUtil;
@@ -28,12 +29,12 @@ public class ChatHandler {
 		sendMessage.sendGamerInfoToRoomUsers(chatMessage.getChatRoomId());
 	}
 	
-	public void chat(WebSocketSession session, ChatMessage chatMessage) {
+	public void chat(ChatRoom room, WebSocketSession session, ChatMessage chatMessage) {
 		/*
 		 * 정답을 맞췄을 경우
 		 */
-		if ( GameManager.isStart() ) {
-			String quiz = GameManager.getQuiz();
+		if ( room.isStart() ) {
+			String quiz = room.getQuiz();
 			String message = chatMessage.getMessage().trim();
 			
 			if ( quiz.equalsIgnoreCase(message) ) {
