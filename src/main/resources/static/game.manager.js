@@ -69,7 +69,7 @@ var execCommand = function(content) {
 }
 
 var execPass = function(content) {
-	
+	 
 	if ( timer != undefined ) {
 		clearInterval(timer);
 		timer = undefined;
