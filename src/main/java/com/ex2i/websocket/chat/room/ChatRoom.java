@@ -92,6 +92,9 @@ public class ChatRoom {
 			chatHandler.quit(session, chatMessage);
 			sendMessage.sendGamerInfoToRoomUsers(chatMessage.getChatRoomId());
 		}
+		else if ( chatMessage.isMessageType(MessageType.ALL) ) {
+			sendMessage.sendToAllInRoom(chatMessage);
+		}
 		
 	}
 	
