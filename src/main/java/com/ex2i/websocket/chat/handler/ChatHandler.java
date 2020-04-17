@@ -14,8 +14,11 @@ public class ChatHandler {
 
 	private SendUtil sendMessage;
 	
+	private List<Gamer> sessions;
+	
 	public ChatHandler(List<Gamer> sessions) {
-		sendMessage = new SendUtil(sessions);
+		this.sessions = sessions;
+		sendMessage = new SendUtil(this.sessions);
 	}
 	
 	public void join(WebSocketSession session, ChatMessage chatMessage) {
@@ -35,6 +38,15 @@ public class ChatHandler {
 			
 			if ( quiz.equalsIgnoreCase(message) ) {
 				chatMessage.setMessageType(MessageType.PASS);
+				
+				Gamer passGamer = sessions.parallelStream()
+											.filter(gamer -> gamer.getSession() == session)
+											.findFirst()
+											.orElse(null);
+				if ( passGamer != null ) {
+					passGamer.addScore();
+				}
+				
 				sendMessage.sendGamerInfoToRoomUsers(chatMessage.getChatRoomId());
 			}
 		}

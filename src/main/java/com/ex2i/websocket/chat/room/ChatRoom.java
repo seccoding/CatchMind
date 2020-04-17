@@ -11,8 +11,10 @@ import com.ex2i.websocket.chat.handler.ChatHandler;
 import com.ex2i.websocket.chat.handler.DrawHandler;
 import com.ex2i.websocket.chat.handler.QuizHandler;
 import com.ex2i.websocket.chat.message.ChatMessage;
+import com.ex2i.websocket.game.GameManager;
 import com.ex2i.websocket.game.constants.CommandType;
 import com.ex2i.websocket.game.message.GameMessage;
+import com.ex2i.websocket.util.GetBean;
 import com.ex2i.websocket.util.SendUtil;
 
 public class ChatRoom {
@@ -25,6 +27,8 @@ public class ChatRoom {
 	private ChatHandler chatHandler;
 	private DrawHandler drawHandler;
 	private QuizHandler quizHandler;
+	
+	private GameManager gameManager;
 	
 	public ChatRoom(List<Gamer> sessions) {
 		this.sessions = sessions;
@@ -98,6 +102,13 @@ public class ChatRoom {
 		
 	}
 	
+	public void gameHandle(GameMessage gameMessage) {
+		if ( gameManager == null ) {
+			gameManager = GetBean.get("gameManager");
+		}
+		gameManager.handle(gameMessage);
+	}
+	
 	
 	/**
 	 * 방을 나간 참여자 제거
@@ -157,5 +168,5 @@ public class ChatRoom {
 		quizHandler.nextTurn(gameMessage, gamerIdx);
 		
 	}
-	
+
 }

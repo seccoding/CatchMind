@@ -11,7 +11,6 @@ import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.chat.repo.ChatRepository;
 import com.ex2i.websocket.chat.room.ChatRoom;
-import com.ex2i.websocket.game.GameManager;
 import com.ex2i.websocket.game.constants.CommandType;
 import com.ex2i.websocket.game.message.GameMessage;
 import com.google.gson.Gson;
@@ -19,9 +18,6 @@ import com.google.gson.Gson;
 @Component
 public class SessionHandler extends TextWebSocketHandler {
 
-	@Autowired
-	private GameManager gameManager;
-	
 	@Autowired
 	private ChatRepository repository;
 	
@@ -46,8 +42,10 @@ public class SessionHandler extends TextWebSocketHandler {
 		 * 게임 Rule 관리
 		 */
 		else if ( chatMessage.getMessageType().equals(MessageType.GAME) ) {
+			ChatRoom room = repository.getChatRoom(chatMessage.getChatRoomId());
+			
 			GameMessage gameMessage = gson.fromJson(payload, GameMessage.class);
-			gameManager.handle(gameMessage);
+			room.gameHandle(gameMessage);
 		}
 		/*
 		 * 자신이 속한 방에만 전송
@@ -62,7 +60,7 @@ public class SessionHandler extends TextWebSocketHandler {
 				gameMessage.setChatRoomId(chatMessage.getChatRoomId());
 				gameMessage.setCommand(CommandType.NEXT_TURN);
 				
-				gameManager.handle(gameMessage);
+				room.gameHandle(gameMessage);
 			}
 			
 		}

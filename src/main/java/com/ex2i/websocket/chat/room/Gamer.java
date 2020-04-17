@@ -54,5 +54,9 @@ public class Gamer {
 			e.printStackTrace();
 		}
 	}
+
+	public void addScore() {
+		this.score += 1;
+	}
 	
 }

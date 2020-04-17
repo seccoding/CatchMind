@@ -1,6 +1,7 @@
 package com.ex2i.websocket.game;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.ex2i.websocket.chat.repo.ChatRepository;
@@ -10,6 +11,7 @@ import com.ex2i.websocket.game.message.GameMessage;
 import com.ex2i.websocket.game.quiz.QuizFactory;
 
 @Component
+@Scope("prototype")
 public class GameManager {
 
 	@Autowired
