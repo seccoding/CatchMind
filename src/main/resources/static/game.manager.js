@@ -64,21 +64,25 @@ var execCommand = function(content) {
 	}
 	else if ( content.command == "NEXT_TURN" ) {
 		isControlMe = true;
+		
+		$("#message").attr('disabled', true);
 		$("#quiz").val(content.quiz);
 		$("#quiz").show();
 		$("#clear").click();
 		
 		var gamer = getMember(content.playerSessionId);
-		$("#gamer").text(gamer.name);
+		$("#gamer").text("[" + gamer.name + "님이 문제 제출 중]");
 		
 		gameTimer(content.timer);
 	}
 	else if ( content.command == "NOT_MY_TURN" ) {
 		isControlMe = false;
-		$("#quiz").hide();
 		
+		$("#message").attr('disabled', false);
+		$("#quiz").hide();
+
 		var gamer = getMember(content.playerSessionId);
-		$("#gamer").text(gamer.name);
+		$("#gamer").text("[" + gamer.name + "님이 문제 제출 중]");
 		
 		gameTimer(content.timer);
 	}
