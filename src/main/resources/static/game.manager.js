@@ -48,22 +48,38 @@ var nextTurn = function() {
 
 var execCommand = function(content) {
 	if ( content.command == "START" ) {
-		alert("게임이 시작되었습니다!");
+		receiveChat({
+			message: "게임이 시작되었습니다!"
+			, writer: "System"
+			, fromMe: "other"
+		});
 	}
 	else if ( content.command == "END" ) {
 		isControlMe = false;
-		alert("게임이 종료되었습니다!");
+		receiveChat({
+			message: "게임이 종료되었습니다!"
+			, writer: "System"
+			, fromMe: "other"
+		});
 	}
 	else if ( content.command == "NEXT_TURN" ) {
 		isControlMe = true;
 		$("#quiz").val(content.quiz);
 		$("#quiz").show();
 		$("#clear").click();
+		
+		var gamer = getMember(content.playerSessionId);
+		$("#gamer").text(gamer.name);
+		
 		gameTimer(content.timer);
 	}
 	else if ( content.command == "NOT_MY_TURN" ) {
 		isControlMe = false;
 		$("#quiz").hide();
+		
+		var gamer = getMember(content.playerSessionId);
+		$("#gamer").text(gamer.name);
+		
 		gameTimer(content.timer);
 	}
 }
@@ -75,19 +91,28 @@ var execPass = function(content) {
 		timer = undefined;
 	}
 	
-	alert(content.writer + "님 정답!");
+	receiveChat({
+		message: content.writer + "님 정답! ["+content.message+"]"
+		, writer: "System"
+		, fromMe: "other"
+	});
 }
 
 var quitMember = function(content) {
 	
+	var gamer = getMember(content.sessionId);
+	
+	receiveChat({
+		message: gamer.name + content.message
+		, writer: gamer.name
+		, fromMe: "other"
+	});
+}
+
+var getMember = function(sessionId) {
 	for ( var i in members ) {
-		if ( members[i].sessionId == content.sessionId ) {
-			receiveChat({
-				message: members[i].name + content.message
-				, writer: members[i].name
-				, fromMe: "other"
-			});
-			return;
+		if ( members[i].sessionId == sessionId ) {
+			return members[i];
 		}
 	}
 }
@@ -111,10 +136,12 @@ var gameTimer = function(time) {
         min = parseInt(seconds / 60);
         sec = seconds % 60;
 
+        sec = sec < 10 ? "0"+sec : sec;
+        
         $("#min").text(min);
         $("#sec").text(sec);
 
-        if ( min == 0 && seconds == 0 ) {
+        if ( min == 0 && parseInt(seconds) == 0 ) {
             if ( isControlMe == true ) {
             	isControlMe = false;
             	nextTurn();

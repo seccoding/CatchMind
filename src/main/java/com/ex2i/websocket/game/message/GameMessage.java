@@ -8,6 +8,7 @@ public class GameMessage {
 	private int timer;
 	private String quiz;
 	private int quizSize;
+	private String playerSessionId;
 
 	public String getMessageType() {
 		return messageType;
@@ -55,6 +56,14 @@ public class GameMessage {
 
 	public void setQuizSize(int quizSize) {
 		this.quizSize = quizSize;
+	}
+
+	public String getPlayerSessionId() {
+		return playerSessionId;
+	}
+
+	public void setPlayerSessionId(String playerSessionId) {
+		this.playerSessionId = playerSessionId;
 	}
 
 }

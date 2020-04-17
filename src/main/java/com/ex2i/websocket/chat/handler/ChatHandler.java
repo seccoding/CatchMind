@@ -8,7 +8,6 @@ import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.chat.room.ChatRoom;
 import com.ex2i.websocket.chat.room.Gamer;
-import com.ex2i.websocket.game.GameManager;
 import com.ex2i.websocket.util.SendUtil;
 
 public class ChatHandler {

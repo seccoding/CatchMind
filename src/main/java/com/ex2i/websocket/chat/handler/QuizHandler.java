@@ -23,6 +23,8 @@ public class QuizHandler {
 	public void nextTurn(GameMessage gameMessage, int gamerIdx) {
 		
 		WebSocketSession gamer = this.sessions.get(gamerIdx).getSession();
+		gameMessage.setPlayerSessionId(gamer.getId());
+		
 		// 출제자에게 문제 및 제어권한 부여
 		sendMessage.sendToMe(gamer, gameMessage);
 		
