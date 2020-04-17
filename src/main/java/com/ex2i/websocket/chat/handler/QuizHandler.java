@@ -7,15 +7,16 @@ import org.springframework.web.socket.WebSocketSession;
 import com.ex2i.websocket.chat.room.Gamer;
 import com.ex2i.websocket.game.constants.CommandType;
 import com.ex2i.websocket.game.message.GameMessage;
+import com.ex2i.websocket.util.SendUtil;
 
 public class QuizHandler {
 
-	private SendMessage sendMessage;
+	private SendUtil sendMessage;
 	
 	private List<Gamer> sessions;
 	
 	public QuizHandler(List<Gamer> sessions) {
-		sendMessage = new SendMessage(sessions);
+		sendMessage = new SendUtil(sessions);
 		this.sessions = sessions;
 	}
 	

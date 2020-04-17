@@ -8,13 +8,14 @@ import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.chat.room.Gamer;
 import com.ex2i.websocket.game.GameManager;
+import com.ex2i.websocket.util.SendUtil;
 
 public class ChatHandler {
 
-	private SendMessage sendMessage;
+	private SendUtil sendMessage;
 	
 	public ChatHandler(List<Gamer> sessions) {
-		sendMessage = new SendMessage(sessions);
+		sendMessage = new SendUtil(sessions);
 	}
 	
 	public void join(WebSocketSession session, ChatMessage chatMessage) {

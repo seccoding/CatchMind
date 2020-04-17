@@ -10,10 +10,10 @@ import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.handler.ChatHandler;
 import com.ex2i.websocket.chat.handler.DrawHandler;
 import com.ex2i.websocket.chat.handler.QuizHandler;
-import com.ex2i.websocket.chat.handler.SendMessage;
 import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.game.constants.CommandType;
 import com.ex2i.websocket.game.message.GameMessage;
+import com.ex2i.websocket.util.SendUtil;
 
 public class ChatRoom {
 
@@ -21,14 +21,14 @@ public class ChatRoom {
 	private String name;
 	private List<Gamer> sessions;
 
-	private SendMessage sendMessage;
+	private SendUtil sendMessage;
 	private ChatHandler chatHandler;
 	private DrawHandler drawHandler;
 	private QuizHandler quizHandler;
 	
 	public ChatRoom(List<Gamer> sessions) {
 		this.sessions = sessions;
-		sendMessage = new SendMessage(this.sessions);
+		sendMessage = new SendUtil(this.sessions);
 		chatHandler = new ChatHandler(this.sessions);
 		drawHandler = new DrawHandler(this.sessions);
 		quizHandler = new QuizHandler(this.sessions);

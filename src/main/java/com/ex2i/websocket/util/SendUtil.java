@@ -1,4 +1,4 @@
-package com.ex2i.websocket.chat.handler;
+package com.ex2i.websocket.util;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,11 +9,11 @@ import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.chat.room.Gamer;
 import com.ex2i.websocket.game.message.GamerMessage;
 
-public class SendMessage {
+public class SendUtil {
 
 	private List<Gamer> sessions;
 	
-	public SendMessage(List<Gamer> sessions) {
+	public SendUtil(List<Gamer> sessions) {
 		this.sessions = sessions;
 	}
 	
