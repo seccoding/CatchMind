@@ -28,9 +28,19 @@
 		text-align: right;
 	}
 	
-	.chat_box {
+	.chat_box .member_list {
 		max-height: 500px;
 		overflow: auto;
+	}
+	
+	.member_list > table {
+		width: 350px;
+		border: 1px solid #000000;
+		border-collapse: collapse;
+	}
+	
+	 th, td {
+		border: 1px solid #000000;
 	}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -103,6 +113,16 @@
 			<textarea id="message" style="width: 300px; min-height: 50px;"></textarea>
 		    <button class="send">보내기</button>
 		    <button id="startGame" style="display:none;">게임시작</button>
+		</div>
+	</div>
+	<div style="display: inline-block; vertical-align: top; width: 500px;">
+		<div class="member_list">
+			<table class="members_score">
+				<tr class="members_title">
+					<th>이름</th>
+					<th>점수</th>
+				</tr>
+			</table>
 		</div>
 	</div>
 </div> 

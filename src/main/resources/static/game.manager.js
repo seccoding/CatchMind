@@ -1,37 +1,19 @@
 var isControlMe = false;
 
-var members = [];
-
 var timer = undefined;
 
-var joinMember = function(content) {
-	members.push({
-		sessionId: content.sessionId,
-		writer: content.writer,
-		score: 0
-	});
+var replaceMember = function(content) {
 	
-	console.log(members)
-}
-
-var quitMember = function(content) {
+	$(".members").remove();
 	
-	var idx = -1;
+	var memberList = $(".members_score");
 	
-	for (var i in members) {
-		if ( members[i].sessionId == content.sessionId ) {
-			idx = i;
-			alert(members[i].writer + content.message);
-			break;
-		}
+	var members = content.gamer;
+	console.log(members);
+	
+	for ( var i in members ) {
+		memberList.append('<tr class="members"><td>' + members[i].name + '</td><td>' + members[i].score + '</td></tr>');
 	}
-	
-	if ( idx >= 0 ) {
-		members.splice(idx, 1);
-	}
-	
-	console.log(members)
-	
 }
 
 var startGame = function() {

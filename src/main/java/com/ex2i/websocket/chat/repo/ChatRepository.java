@@ -1,8 +1,8 @@
 package com.ex2i.websocket.chat.repo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -25,8 +25,7 @@ public class ChatRepository {
 		ChatRoom room = new ChatRoom();
 		room.setId((++id) + "");
 		room.setName(roomName);
-		room.setSessions(new HashSet<>());
-		
+		room.setSessions(new ArrayList<>());
 		chatRoomMap.put(id + "", room);
 		
 		return id;

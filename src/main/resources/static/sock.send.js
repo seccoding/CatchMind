@@ -27,11 +27,6 @@ $().ready(function() {
 
 			if (content.messageType == "CHAT"
 					|| content.messageType == "JOIN") {
-				
-				if ( content.messageType == "JOIN" ) {
-					joinMember(content);
-				}
-				
 				receiveChat(content);
 			} else if (content.messageType == "START-DRAW") {
 				receiveStartDraw(content.point);
@@ -46,6 +41,8 @@ $().ready(function() {
 				execPass(content);
 			} else if ( content.messageType == "QUIT" ) {
 				quitMember(content);
+			} else if ( content.messageType == "GAMER-INFO" ) {
+				replaceMember(content);
 			}
 		}
 	}

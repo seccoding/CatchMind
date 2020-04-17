@@ -22,4 +22,6 @@ public interface MessageType {
 	
 	final String QUIT = "QUIT";
 	
+	final String GAMER_INFO = "GAMER-INFO";
+	
 }
