@@ -1,89 +1,52 @@
 package com.ex2i.websocket.chat.handler;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
+import java.util.List;
+
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.ex2i.websocket.chat.contants.MessageType;
 import com.ex2i.websocket.chat.message.ChatMessage;
-import com.ex2i.websocket.chat.repo.ChatRepository;
-import com.ex2i.websocket.chat.room.ChatRoom;
+import com.ex2i.websocket.chat.room.Gamer;
 import com.ex2i.websocket.game.GameManager;
-import com.ex2i.websocket.game.constants.CommandType;
-import com.ex2i.websocket.game.message.GameMessage;
-import com.google.gson.Gson;
 
-@Component
-public class ChatHandler extends TextWebSocketHandler {
+public class ChatHandler {
 
-	@Autowired
-	private GameManager gameManager;
+	private SendMessage sendMessage;
 	
-	@Autowired
-	private ChatRepository repository;
-	
-	@Override
-	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		
-		String payload = message.getPayload();
-		payload = payload.replace("<", "&lt;").replace(">", "&gt;");
-		Gson gson = new Gson();
-		
-		ChatMessage chatMessage = gson.fromJson(payload, ChatMessage.class);
-		chatMessage.setSessionId(session.getId());
-		/*
-		 * 모든 채팅방에 전송
-		 */
-		if ( chatMessage.getMessageType().equals(MessageType.ALL) ) {
-			repository.getChatRooms().parallelStream().forEach(room -> {
-				room.handle(session, chatMessage);
-			});
-		}
-		/*
-		 * 게임 Rule 관리
-		 */
-		else if ( chatMessage.getMessageType().equals(MessageType.GAME) ) {
-			GameMessage gameMessage = gson.fromJson(payload, GameMessage.class);
-			gameManager.handle(gameMessage);
-		}
-		/*
-		 * 자신이 속한 방에만 전송
-		 */
-		else {
-			ChatRoom room = repository.getChatRoom(chatMessage.getChatRoomId());
-			room.handle(session, chatMessage);
-			
-			// 정답을 맞추었을 때
-			if ( chatMessage.getMessageType().equals(MessageType.PASS) ) {
-				GameMessage gameMessage = new GameMessage();
-				gameMessage.setChatRoomId(chatMessage.getChatRoomId());
-				gameMessage.setCommand(CommandType.NEXT_TURN);
-				
-				gameManager.handle(gameMessage);
-			}
-			
-		}
-		
+	public ChatHandler(List<Gamer> sessions) {
+		sendMessage = new SendMessage(sessions);
 	}
 	
-	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		
-		String roomId = repository.getRoomId(session);
-		
-		if ( roomId != null ) {
-			repository.remove(roomId, session);
+	public void join(WebSocketSession session, ChatMessage chatMessage) {
+		sendMessage.joinInRoom(session, chatMessage.getWriter());
+		chatMessage.setMessage(chatMessage.getWriter() + "님이 입장하셨습니다.");
+		sendMessage.sendMessageToRoomUsers(session, chatMessage);
+		sendMessage.sendGamerInfoToRoomUsers(chatMessage.getChatRoomId());
+	}
+	
+	public void chat(WebSocketSession session, ChatMessage chatMessage) {
+		/*
+		 * 정답을 맞췄을 경우
+		 */
+		if ( GameManager.isStart() ) {
+			String quiz = GameManager.getQuiz();
+			String message = chatMessage.getMessage().trim();
 			
-			ChatMessage chatMessage = new ChatMessage();
-			chatMessage.setSessionId(session.getId());
-			chatMessage.setMessageType(MessageType.QUIT);
-			chatMessage.setMessage("님이 게임에서 나갔습니다.");
-			
-			repository.getChatRoom(roomId).handle(null, chatMessage);
+			if ( quiz.equalsIgnoreCase(message) ) {
+				chatMessage.setMessageType(MessageType.PASS);
+				sendMessage.sendGamerInfoToRoomUsers(chatMessage.getChatRoomId());
+			}
 		}
+		sendMessage.sendMessageToRoomUsers(session, chatMessage);
+		
+	}
+
+	public void secretChat(WebSocketSession session, ChatMessage chatMessage) {
+		sendMessage.sendMessageToUser(session, chatMessage);
+	}
+
+	public void quit(WebSocketSession session, ChatMessage chatMessage) {
+		sendMessage.sendMessageToRoomUsers(session, chatMessage);
 	}
 	
 }

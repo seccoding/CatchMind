@@ -7,6 +7,7 @@ public class GameMessage {
 	private String command;
 	private int timer;
 	private String quiz;
+	private int quizSize;
 
 	public String getMessageType() {
 		return messageType;
@@ -46,6 +47,14 @@ public class GameMessage {
 
 	public void setQuiz(String quiz) {
 		this.quiz = quiz;
+	}
+
+	public int getQuizSize() {
+		return quizSize;
+	}
+
+	public void setQuizSize(int quizSize) {
+		this.quizSize = quizSize;
 	}
 
 }

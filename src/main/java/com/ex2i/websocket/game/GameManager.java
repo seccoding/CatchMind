@@ -41,7 +41,7 @@ public class GameManager {
 		String roomId = gameMessage.getChatRoomId();
 		
 		if ( command.equals(CommandType.START) ) {
-			startGame(roomId);
+			startGame(roomId, gameMessage.getQuizSize());
 		}
 		else if ( command.equals(CommandType.END) ) {
 			endGame(roomId);
@@ -56,10 +56,10 @@ public class GameManager {
 	 * 게임을 시작한다.
 	 * @param roomId
 	 */
-	private void startGame(String roomId) {
+	private void startGame(String roomId, int quizSize) {
 		isStart = true;
 		idx = 0;
-		quizFactory.reset();
+		quizFactory.reset(quizSize);
 		ChatRoom room = repo.getChatRoom(roomId);
 		room.startGame();
 		nextTurn(roomId);

@@ -6,14 +6,14 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import com.ex2i.websocket.chat.handler.ChatHandler;
+import com.ex2i.websocket.chat.handler.SessionHandler;
 
 @Configuration
 @EnableWebSocket
 public class ApplicationConfigure implements WebSocketConfigurer {
 
 	@Autowired
-	private ChatHandler handler;
+	private SessionHandler handler;
 	
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {

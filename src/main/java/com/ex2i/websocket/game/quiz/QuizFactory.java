@@ -23,6 +23,9 @@ public class QuizFactory {
 	
 	private List<String> quizList;
 
+	/**
+	 * 퀴즈 초기화
+	 */
 	@PostConstruct
 	public void reset() {
 		if ( quizList == null ) {
@@ -45,6 +48,34 @@ public class QuizFactory {
 		quizList = quizList.stream().distinct().collect(Collectors.toList());
 	}
 	
+	/**
+	 * 퀴즈 목록에서 quizSize만큼만 추려냄.
+	 * @param quizSize
+	 */
+	public void reset(int quizSize) {
+		reset();
+		
+		if ( quizSize == 0 ) {
+			quizSize = quizList.size();
+		}
+		
+		List<String> tempQuizList = new ArrayList<>();
+		
+		if ( quizList.size() > quizSize ) {
+			while ( tempQuizList.size() < quizSize ) {
+				tempQuizList.add(getQuiz());
+			}
+			
+			quizList.clear();
+			quizList.addAll(tempQuizList);
+		}
+		
+	}
+	
+	/**
+	 * 퀴즈 추출
+	 * @return
+	 */
 	public String getQuiz() {
 		Random rnd = new Random();
 		int idx = rnd.nextInt(quizList.size());
@@ -53,6 +84,10 @@ public class QuizFactory {
 		return quiz; 
 	}
 	
+	/**
+	 * 모든 퀴즈를 다 풀었는지 체크
+	 * @return
+	 */
 	public boolean isEmpty() {
 		return quizList.size() == 0;
 	}

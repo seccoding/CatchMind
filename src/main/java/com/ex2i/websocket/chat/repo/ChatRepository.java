@@ -22,10 +22,9 @@ public class ChatRepository {
 	}
 	
 	public int createRoom(String roomName) {
-		ChatRoom room = new ChatRoom();
+		ChatRoom room = new ChatRoom(new ArrayList<>());
 		room.setId((++id) + "");
 		room.setName(roomName);
-		room.setSessions(new ArrayList<>());
 		chatRoomMap.put(id + "", room);
 		
 		return id;

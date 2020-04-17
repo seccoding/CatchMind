@@ -7,7 +7,6 @@ var replaceMember = function(content) {
 	$(".members").remove();
 	
 	var memberList = $(".members_score");
-	
 	var members = content.gamer;
 	console.log(members);
 	
@@ -73,15 +72,6 @@ var execPass = function(content) {
 	if ( timer != undefined ) {
 		clearInterval(timer);
 		timer = undefined;
-	}
-	
-	var sessionId = content.sessionId;
-	
-	for ( var i in members ) {
-		if ( members[i].sessionId == sessionId ) {
-			members[i].score += 1;
-			break;
-		}
 	}
 	
 	alert(content.writer + "님 정답!");

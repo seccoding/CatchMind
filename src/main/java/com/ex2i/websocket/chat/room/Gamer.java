@@ -1,6 +1,11 @@
 package com.ex2i.websocket.chat.room;
 
+import java.io.IOException;
+
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+
+import com.google.gson.Gson;
 
 public class Gamer {
 
@@ -37,5 +42,17 @@ public class Gamer {
 	public void setScore(int score) {
 		this.score = score;
 	}
-
+	
+	public void send(Object message) {
+		Gson gson = new Gson();
+		
+		TextMessage textMessage = new TextMessage(gson.toJson(message));
+		try {
+			if ( session.isOpen() )
+				session.sendMessage(textMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

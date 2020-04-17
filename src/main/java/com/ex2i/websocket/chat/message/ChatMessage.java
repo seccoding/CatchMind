@@ -68,6 +68,17 @@ public class ChatMessage {
 	public void setMessageType(String messageType) {
 		this.messageType = messageType;
 	}
+	
+	public boolean isMessageType( String ... messageTypes) {
+		
+		for (String messageType : messageTypes) {
+			if ( this.messageType.equalsIgnoreCase(messageType) ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	public String getToSessionId() {
 		return toSessionId;
