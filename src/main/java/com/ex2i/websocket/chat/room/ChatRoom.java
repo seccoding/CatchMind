@@ -38,11 +38,19 @@ public class ChatRoom {
 		quizHandler = new QuizHandler(this.sessions);
 	}
 	
+	private void initGameManager() {
+		if ( gameManager == null ) {
+			gameManager = GetBean.get("gameManager");
+		}
+	}
+	
 	public boolean isStart() {
+		initGameManager();
 		return gameManager.isStart();
 	}
 	
 	public String getQuiz() {
+		initGameManager();
 		return gameManager.getQuiz();
 	}
 	
@@ -111,9 +119,7 @@ public class ChatRoom {
 	}
 	
 	public void gameHandle(GameMessage gameMessage) {
-		if ( gameManager == null ) {
-			gameManager = GetBean.get("gameManager");
-		}
+		initGameManager();
 		gameManager.handle(gameMessage);
 	}
 	
