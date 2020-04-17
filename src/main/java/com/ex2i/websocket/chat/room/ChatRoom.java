@@ -1,7 +1,7 @@
 package com.ex2i.websocket.chat.room;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,13 +13,14 @@ import com.ex2i.websocket.chat.message.ChatMessage;
 import com.ex2i.websocket.game.GameManager;
 import com.ex2i.websocket.game.constants.CommandType;
 import com.ex2i.websocket.game.message.GameMessage;
+import com.ex2i.websocket.game.message.GamerMessage;
 import com.google.gson.Gson;
 
 public class ChatRoom {
 
 	private String id;
 	private String name;
-	private Set<WebSocketSession> sessions = new HashSet<>();
+	private List<Gamer> sessions;
 
 	public String getId() {
 		return id;
@@ -36,22 +37,29 @@ public class ChatRoom {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public void setSessions(List<Gamer> sessions) {
+		this.sessions = sessions;
+	}
 
 	public Set<WebSocketSession> getClosedSessions() {
 		return sessions.parallelStream()
-							.filter(session -> !session.isOpen())
-							.collect(Collectors.toSet());
+						.filter(gamer -> !gamer.getSession().isOpen())
+						.map(gamer -> gamer.getSession())
+						.collect(Collectors.toSet());
 	}
 	
 	public Set<WebSocketSession> getSessions() {
 		return sessions.parallelStream()
-							.filter(session -> session.isOpen())
-							.collect(Collectors.toSet());
+						.filter(gamer -> gamer.getSession().isOpen())
+						.map(gamer -> gamer.getSession())
+						.collect(Collectors.toSet());
+	}
+	
+	public List<Gamer> getGamers() {
+		return sessions.stream().filter(gamer -> gamer.getSession().isOpen()).collect(Collectors.toList());
 	}
 
-	public void setSessions(Set<WebSocketSession> sessions) {
-		this.sessions = sessions;
-	}
 	
 	/**
 	 * 채팅 및 그림 그리기 전송
@@ -60,9 +68,10 @@ public class ChatRoom {
 	 */
 	public void handle(WebSocketSession session, ChatMessage chatMessage) {
 		if ( chatMessage.getMessageType().equals(MessageType.JOIN) ) {
-			joinInRoom(session);
+			joinInRoom(session, chatMessage);
 			chatMessage.setMessage(chatMessage.getWriter() + "님이 입장하셨습니다.");
 			sendMessageToRoomUsers(session, chatMessage);
+			sendGamerInfoToRoomUsers();
 		}
 		else if ( chatMessage.getMessageType().equals(MessageType.CHAT) ) {
 			
@@ -75,6 +84,7 @@ public class ChatRoom {
 				
 				if ( quiz.equalsIgnoreCase(message) ) {
 					chatMessage.setMessageType(MessageType.PASS);
+					sendGamerInfoToRoomUsers();
 				}
 			}
 			sendMessageToRoomUsers(session, chatMessage);
@@ -91,9 +101,10 @@ public class ChatRoom {
 		else if ( chatMessage.getMessageType().equals(MessageType.QUIT) ) {
 			getSessions().parallelStream()
 						.forEach(sess -> {
-							System.out.println(sess);
 							send(sess, chatMessage);
 						});
+			sendGamerInfoToRoomUsers();
+			
 		}
 		
 	}
@@ -102,8 +113,12 @@ public class ChatRoom {
 	 * 방 내 참여자로 등록
 	 * @param session
 	 */
-	private void joinInRoom(WebSocketSession session) {
-		sessions.add(session);
+	private void joinInRoom(WebSocketSession session, ChatMessage chatMessage) {
+		Gamer gamer = new Gamer();
+		gamer.setName(chatMessage.getWriter());
+		gamer.setScore(0);
+		gamer.setSession(session);
+		sessions.add(gamer);
 	}
 	
 	/**
@@ -178,7 +193,12 @@ public class ChatRoom {
 	 * @param session
 	 */
 	public void remove(WebSocketSession session) {
-		sessions.remove(session);
+		
+		Gamer quitGamer = sessions.parallelStream().filter(gamer -> gamer.getSession() == session).findFirst().orElse(null);
+		
+		if ( quitGamer != null ) {
+			sessions.remove(quitGamer);
+		}
 	}
 
 	/**
@@ -284,6 +304,29 @@ public class ChatRoom {
 			
 			idx += 1;
 		}
+		
+	}
+	
+	public void sendGamerInfoToRoomUsers() {
+		
+		List<Gamer> gamerInfoList = getGamers();
+		GamerMessage message = new GamerMessage();
+		message.setGamer(gamerInfoList);
+		message.setChatRoomId(id);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(message);
+		TextMessage textMessage = new TextMessage(json);
+		
+		getSessions().parallelStream()
+					.forEach(session -> {
+						try {
+							if ( session.isOpen() )
+								session.sendMessage(textMessage);
+						} catch (IOException e) {
+							e.printStackTrace();
+						} 
+					});
 		
 	}
 
