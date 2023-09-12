@@ -35,7 +35,7 @@ public class GameManager {
 		return quiz;
 	}
 	
-	/**
+	/**   
 	 * 게임 Rule을 관리한다.
 	 * @param gameMessage
 	 */
