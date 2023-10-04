@@ -2,7 +2,7 @@ package com.ex2i.websocket.chat.contants;
 
 public interface MessageType {
 
-	final String GAME = "GAME";
+	final String GAME = "GAME"; 
 	
 	final String ALL = "ALL";
 	
