@@ -22,6 +22,7 @@ public class SendUtil {
 	 * @param session
 	 */
 	public void joinInRoom(WebSocketSession session, String writer) {
+		sessions.removeIf(user -> !user.getSession().isOpen());
 		Gamer gamer = new Gamer();
 		gamer.setName(writer);
 		gamer.setScore(0);
@@ -36,6 +37,7 @@ public class SendUtil {
 	 * @param chatMessage
 	 */
 	public void sendMessageToRoomUsers(WebSocketSession session, Object message) {
+		sessions.removeIf(user -> !user.getSession().isOpen());
 		sendToMe(session, message);
 		sendMessageToRoomUsersWithoutMe(session, message);
 	}
@@ -46,6 +48,7 @@ public class SendUtil {
 	 * @param chatMessage
 	 */
 	public void sendToMe(WebSocketSession session, Object message) {
+		sessions.removeIf(user -> !user.getSession().isOpen());
 		if ( message instanceof ChatMessage ) {
 			((ChatMessage) message).setFromMe("me");
 		}
@@ -68,6 +71,7 @@ public class SendUtil {
 	 * @param chatMessage
 	 */
 	public void sendMessageToRoomUsersWithoutMe(WebSocketSession session, Object message) {
+		sessions.removeIf(user -> !user.getSession().isOpen());
 		sessions.parallelStream()
 				.filter(gamer -> gamer.getSession() != session)
 				.filter(gamer -> gamer.getSession().isOpen())
@@ -82,6 +86,7 @@ public class SendUtil {
 	 * @param chatMessage
 	 */
 	public void sendMessageToUser(WebSocketSession session, ChatMessage chatMessage) {
+		sessions.removeIf(user -> !user.getSession().isOpen());
 		sendToMe(session, chatMessage);
 		String toSessionId = chatMessage.getToSessionId();
 		sessions.parallelStream()
@@ -96,6 +101,7 @@ public class SendUtil {
 	 * 방내 참여자 정보 전송.
 	 */
 	public void sendGamerInfoToRoomUsers(String roomId) {
+		sessions.removeIf(user -> !user.getSession().isOpen());
 		
 		GamerMessage message = new GamerMessage();
 		message.setGamer( sessions.parallelStream().filter(gamer -> gamer.getSession().isOpen()).collect(Collectors.toList()) );
@@ -113,6 +119,8 @@ public class SendUtil {
 	 * @param message
 	 */
 	public void sendToAllInRoom(Object message) {
+		sessions.removeIf(user -> !user.getSession().isOpen());
+		
 		sessions.parallelStream()
 				.filter(gamer -> gamer.getSession().isOpen())
 				.forEach(gamer -> {

@@ -67,12 +67,22 @@ public class GameManager {
 	public void showOrHideStartButton(String roomId) {
 		ChatRoom room = repo.getChatRoom(roomId);
 		
-		if ( room == null || room.isStart() ) {
+		if ( room == null ) {
+			return;
+		}
+		
+		if ( room.isStart() ) {
+			GameMessage message = new GameMessage();
+			message.setChatRoomId(roomId);
+			message.setMessageType(MessageType.GAME);
+			message.setCommand(CommandType.HIDE_START_BTN);
+			room.getGamers().parallelStream().forEach(gamer -> {
+				gamer.send(message);
+			});
 			return;
 		}
 		
 		int gamerCnt = room.getGamers().size();
-		
 		GameMessage message = new GameMessage();
 		message.setChatRoomId(roomId);
 		message.setMessageType(MessageType.GAME);
@@ -108,7 +118,7 @@ public class GameManager {
 	 * 게임을 종료한다.
 	 * @param roomId
 	 */
-	private void endGame(String roomId) {
+	public void endGame(String roomId) {
 		isStart = false;
 		ChatRoom room = repo.getChatRoom(roomId);
 		room.endGame();

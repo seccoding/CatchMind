@@ -49,6 +49,13 @@ public class ChatRoom {
 		return gameManager.isStart();
 	}
 	
+	public void changeStartState() {
+		if ( getGamers().size() <= 1 ) {
+			initGameManager();
+			gameManager.endGame(id);
+		}
+	}
+	
 	public String getQuiz() {
 		initGameManager();
 		return gameManager.getQuiz();
@@ -151,9 +158,9 @@ public class ChatRoom {
 		GameMessage message = new GameMessage();
 		message.setChatRoomId(id);
 		message.setMessageType(MessageType.GAME);
-		message.setCommand(CommandType.START);
 		
 		sendMessage.sendToAllInRoom(message);
+		gameManager.showOrHideStartButton(id);
 	}
 
 	/**
@@ -167,6 +174,8 @@ public class ChatRoom {
 		message.setCommand(CommandType.END);
 		
 		sendMessage.sendToAllInRoom(message);
+		
+		gameManager.showOrHideStartButton(id);
 		
 	}
 

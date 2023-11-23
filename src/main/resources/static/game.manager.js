@@ -69,6 +69,7 @@ var execCommand = function(content) {
 		$("#quiz").val(content.quiz);
 		$("#quiz").show();
 		$("#clear").click();
+		$("#control-panel").show();
 		
 		var gamer = getMember(content.playerSessionId);
 		$("#gamer").text("[" + gamer.name + "님이 문제 제출 중]");
@@ -80,7 +81,8 @@ var execCommand = function(content) {
 		
 		$("#message").attr('disabled', false);
 		$("#quiz").hide();
-
+        $("#control-panel").hide();
+        
 		var gamer = getMember(content.playerSessionId);
 		$("#gamer").text("[" + gamer.name + "님이 문제 제출 중]");
 		

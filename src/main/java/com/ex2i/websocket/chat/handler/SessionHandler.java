@@ -81,6 +81,7 @@ public class SessionHandler extends TextWebSocketHandler {
 			chatMessage.setMessage("님이 게임에서 나갔습니다.");
 			
 			repository.getChatRoom(roomId).handle(null, chatMessage);
+			repository.getChatRoom(roomId).changeStartState();
 		}
 	}
 	
