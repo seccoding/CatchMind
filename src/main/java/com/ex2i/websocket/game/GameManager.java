@@ -19,6 +19,8 @@ public class GameManager {
 	@Autowired
 	private ChatRepository repo;
 	
+	private int count = 10;
+	
 	private QuizFactory quizFactory;
 	
 	private boolean isStart;
@@ -129,14 +131,25 @@ public class GameManager {
 	 * @param roomId
 	 */
 	private void nextTurn(String roomId) {
-		isStart = true;
 		
-		if ( quizFactory.isEmpty() ) {
+		if ( quizFactory.isEmpty() || !isStart ) {
 			endGame(roomId);
 			return;
 		}
 		
 		ChatRoom room = repo.getChatRoom(roomId);
+		
+		boolean isGameOver = room.getGamers().parallelStream()
+								.filter(gamer -> gamer.getSession().isOpen())
+								.filter(gamer -> gamer.getScore() >= count)
+								.count() > 0;
+
+		if (isGameOver) {
+			endGame(roomId);
+			return;
+		}
+		
+		isStart = true;
 		
 		if ( room.getSessions().size() == idx ) {
 			idx = 0;

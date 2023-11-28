@@ -43,7 +43,6 @@ public class SessionHandler extends TextWebSocketHandler {
 		 */
 		else if ( chatMessage.getMessageType().equals(MessageType.GAME) ) {
 			ChatRoom room = repository.getChatRoom(chatMessage.getChatRoomId());
-			
 			GameMessage gameMessage = gson.fromJson(payload, GameMessage.class);
 			room.gameHandle(gameMessage);
 		}
@@ -55,14 +54,13 @@ public class SessionHandler extends TextWebSocketHandler {
 			room.handle(session, chatMessage);
 			
 			// 정답을 맞추었을 때
-			if ( chatMessage.getMessageType().equals(MessageType.PASS) ) {
+			if ( room.isStart() && chatMessage.getMessageType().equals(MessageType.PASS) ) {
 				GameMessage gameMessage = new GameMessage();
 				gameMessage.setChatRoomId(chatMessage.getChatRoomId());
 				gameMessage.setCommand(CommandType.NEXT_TURN);
 				
 				room.gameHandle(gameMessage);
 			}
-			
 		}
 		
 	}

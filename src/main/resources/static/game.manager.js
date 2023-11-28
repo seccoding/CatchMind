@@ -55,7 +55,17 @@ var execCommand = function(content) {
 		});
 	}
 	else if ( content.command == "END" ) {
+        clearInterval(timer);
+        
 		isControlMe = false;
+		
+		$("#message").attr('disabled', false);
+        $("#quiz").val("");
+        $("#quiz").show();
+        $("#clear").click();
+        $("#control-panel").show();
+        $("#gamer").text("");
+        $("#timer").hide();
 		receiveChat({
 			message: "게임이 종료되었습니다!"
 			, writer: "System"

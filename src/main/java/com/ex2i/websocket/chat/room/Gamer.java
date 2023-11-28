@@ -48,8 +48,11 @@ public class Gamer {
 		
 		TextMessage textMessage = new TextMessage(gson.toJson(message));
 		try {
-			if ( session.isOpen() )
-				session.sendMessage(textMessage);
+			if ( session.isOpen() ) {
+				synchronized (session) {
+					session.sendMessage(textMessage);
+				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

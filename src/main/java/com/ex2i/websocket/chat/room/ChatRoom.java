@@ -154,6 +154,8 @@ public class ChatRoom {
 	 * 게임을 시작한다.
 	 */
 	public void startGame() {
+		getGamers().forEach(gamer -> gamer.setScore(0));
+		sendMessage.sendGamerInfoToRoomUsers(id);
 		
 		GameMessage message = new GameMessage();
 		message.setChatRoomId(id);
@@ -167,16 +169,13 @@ public class ChatRoom {
 	 * 게임을 종료한다.
 	 */
 	public void endGame() {
-		
 		GameMessage message = new GameMessage();
 		message.setChatRoomId(id);
 		message.setMessageType(MessageType.GAME);
 		message.setCommand(CommandType.END);
 		
 		sendMessage.sendToAllInRoom(message);
-		
 		gameManager.showOrHideStartButton(id);
-		
 	}
 
 	/**
